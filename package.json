@@ -1,0 +1,24 @@
+{
+  "name": "triv_ai",
+  "version": "1.0.0",
+  "description": "A Trivia Game Powered by AI",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "aws-amplify": "^6.0.13-unstable.551a58c.0"
+  },
+  "devDependencies": {
+    "@aws-amplify/backend": "^0.10.2",
+    "@aws-amplify/backend-cli": "^0.9.7",
+    "typescript": "^5.3.3"
+  }
+}

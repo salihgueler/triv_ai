@@ -1,14 +1,34 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_authenticator/amplify_authenticator.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:triv_ai/amplifyconfiguration.dart';
 import 'package:triv_ai/routes.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 
-void main() {
+Future<void> main() async {
   usePathUrlStrategy();
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    await _configureAmplify();
+  } on AmplifyException catch (e) {
+    safePrint('Error configuring Amplify: $e');
+  }
   runApp(const TrivAIApp());
+}
+
+Future<void> _configureAmplify() async {
+  try {
+    await Amplify.addPlugin(AmplifyAuthCognito());
+    await Amplify.configure(amplifyConfig);
+    safePrint('Successfully configured');
+  } on Exception catch (e) {
+    safePrint('Error configuring Amplify: $e');
+  }
 }
 
 class TrivAIApp extends StatelessWidget {
@@ -16,32 +36,22 @@ class TrivAIApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      routerDelegate: router.routerDelegate,
-      routeInformationParser: router.routeInformationParser,
-      routeInformationProvider: router.routeInformationProvider,
-      theme: FlexThemeData.light(
-        scheme: FlexScheme.blueWhale,
-        fontFamily: GoogleFonts.kanit().fontFamily,
+    return Authenticator(
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        builder: Authenticator.builder(),
+        routerDelegate: router.routerDelegate,
+        routeInformationParser: router.routeInformationParser,
+        routeInformationProvider: router.routeInformationProvider,
+        theme: FlexThemeData.light(
+          scheme: FlexScheme.blueWhale,
+          fontFamily: GoogleFonts.kanit().fontFamily,
+        ),
+        darkTheme: FlexThemeData.dark(
+          scheme: FlexScheme.blueWhale,
+          fontFamily: GoogleFonts.kanit().fontFamily,
+        ),
       ),
-      darkTheme: FlexThemeData.dark(
-        scheme: FlexScheme.blueWhale,
-        fontFamily: GoogleFonts.kanit().fontFamily,
-      ),
-      // home: QuizScreen(
-      //   questions: [
-      //     Question(
-      //       id: '1',
-      //       title: 'What is the capital of Türkiye?',
-      //       answer: 'Ankara',
-      //       category: 'Geography',
-      //       options: ['İstanbul', 'Ankara', 'İzmir', 'Antalya'],
-      //       createdAt: DateTime.now().toString(),
-      //       updatedAt: DateTime.now().toString(),
-      //     ),
-      //   ],
-      // ),
     );
   }
 }
