@@ -1,6 +1,7 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:triv_ai/question/data/question.dart';
+import 'package:triv_ai/models/Question.dart';
 
 part 'quiz_state.dart';
 
@@ -14,8 +15,9 @@ class QuizCubit extends Cubit<QuizState> {
       answer: 'Ankara',
       category: 'Geography',
       options: ['İstanbul', 'Ankara', 'İzmir', 'Antalya'],
-      createdAt: DateTime.now().toString(),
-      updatedAt: DateTime.now().toString(),
+      difficulty: "Easy",
+      createdAt: TemporalDateTime(DateTime.now()),
+      updatedAt: TemporalDateTime(DateTime.now()),
     ),
     Question(
       id: '2',
@@ -23,8 +25,9 @@ class QuizCubit extends Cubit<QuizState> {
       answer: 'William Shakespeare',
       category: 'Literature',
       options: ['Charles Dickens', 'William Shakespeare', 'Leo Tolstoy', 'Mark Twain'],
-      createdAt: DateTime.now().toString(),
-      updatedAt: DateTime.now().toString(),
+      difficulty: "Easy",
+      createdAt: TemporalDateTime(DateTime.now()),
+      updatedAt: TemporalDateTime(DateTime.now()),
     ),
     Question(
       id: '3',
@@ -32,8 +35,9 @@ class QuizCubit extends Cubit<QuizState> {
       answer: 'Mars',
       category: 'Astronomy',
       options: ['Jupiter', 'Mars', 'Venus', 'Mercury'],
-      createdAt: DateTime.now().toString(),
-      updatedAt: DateTime.now().toString(),
+      difficulty: "Easy",
+      createdAt: TemporalDateTime(DateTime.now()),
+      updatedAt: TemporalDateTime(DateTime.now()),
     ),
     Question(
       id: '4',
@@ -41,8 +45,9 @@ class QuizCubit extends Cubit<QuizState> {
       answer: 'Avocado',
       category: 'Cuisine',
       options: ['Tomato', 'Potato', 'Avocado', 'Eggplant'],
-      createdAt: DateTime.now().toString(),
-      updatedAt: DateTime.now().toString(),
+      difficulty: "Easy",
+      createdAt: TemporalDateTime(DateTime.now()),
+      updatedAt: TemporalDateTime(DateTime.now()),
     ),
     Question(
       id: '5',
@@ -50,8 +55,9 @@ class QuizCubit extends Cubit<QuizState> {
       answer: '1912',
       category: 'History',
       options: ['1912', '1910', '1914', '1908'],
-      createdAt: DateTime.now().toString(),
-      updatedAt: DateTime.now().toString(),
+      difficulty: "Easy",
+      createdAt: TemporalDateTime(DateTime.now()),
+      updatedAt: TemporalDateTime(DateTime.now()),
     ),
     Question(
       id: '6',
@@ -59,8 +65,9 @@ class QuizCubit extends Cubit<QuizState> {
       answer: 'Oxygen',
       category: 'Science',
       options: ['Gold', 'Oxygen', 'Silver', 'Iron'],
-      createdAt: DateTime.now().toString(),
-      updatedAt: DateTime.now().toString(),
+      difficulty: "Easy",
+      createdAt: TemporalDateTime(DateTime.now()),
+      updatedAt: TemporalDateTime(DateTime.now()),
     ),
     Question(
       id: '7',
@@ -68,8 +75,9 @@ class QuizCubit extends Cubit<QuizState> {
       answer: 'Blue Whale',
       category: 'Nature',
       options: ['Elephant', 'Blue Whale', 'Giraffe', 'Hippopotamus'],
-      createdAt: DateTime.now().toString(),
-      updatedAt: DateTime.now().toString(),
+      difficulty: "Easy",
+      createdAt: TemporalDateTime(DateTime.now()),
+      updatedAt: TemporalDateTime(DateTime.now()),
     ),
     Question(
       id: '8',
@@ -77,8 +85,9 @@ class QuizCubit extends Cubit<QuizState> {
       answer: 'Leonardo da Vinci',
       category: 'Art',
       options: ['Vincent Van Gogh', 'Pablo Picasso', 'Leonardo da Vinci', 'Claude Monet'],
-      createdAt: DateTime.now().toString(),
-      updatedAt: DateTime.now().toString(),
+      difficulty: "Easy",
+      createdAt: TemporalDateTime(DateTime.now()),
+      updatedAt: TemporalDateTime(DateTime.now()),
     ),
     Question(
       id: '9',
@@ -86,8 +95,9 @@ class QuizCubit extends Cubit<QuizState> {
       answer: 'Tokyo',
       category: 'Geography',
       options: ['Kyoto', 'Osaka', 'Tokyo', 'Hiroshima'],
-      createdAt: DateTime.now().toString(),
-      updatedAt: DateTime.now().toString(),
+      difficulty: "Easy",
+      createdAt: TemporalDateTime(DateTime.now()),
+      updatedAt: TemporalDateTime(DateTime.now()),
     ),
     Question(
       id: '10',
@@ -95,8 +105,9 @@ class QuizCubit extends Cubit<QuizState> {
       answer: 'Albert Einstein',
       category: 'Science',
       options: ['Isaac Newton', 'Galileo Galilei', 'Nikola Tesla', 'Albert Einstein'],
-      createdAt: DateTime.now().toString(),
-      updatedAt: DateTime.now().toString(),
+      difficulty: "Easy",
+      createdAt: TemporalDateTime(DateTime.now()),
+      updatedAt: TemporalDateTime(DateTime.now()),
     ),
   ];
 
