@@ -46,6 +46,7 @@ dependencies:
   amplify_auth_cognito: ^1.6.1
   amplify_authenticator: ^1.5.2
   amplify_api: ^1.6.2
+  http: ^1.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
