@@ -41,21 +41,18 @@ class TrivAIApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Authenticator(
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        builder: Authenticator.builder(),
-        routerDelegate: router.routerDelegate,
-        routeInformationParser: router.routeInformationParser,
-        routeInformationProvider: router.routeInformationProvider,
-        theme: FlexThemeData.light(
-          scheme: FlexScheme.blueWhale,
-          fontFamily: GoogleFonts.kanit().fontFamily,
-        ),
-        darkTheme: FlexThemeData.dark(
-          scheme: FlexScheme.blueWhale,
-          fontFamily: GoogleFonts.kanit().fontFamily,
-        ),
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      routerDelegate: router.routerDelegate,
+      routeInformationParser: router.routeInformationParser,
+      routeInformationProvider: router.routeInformationProvider,
+      theme: FlexThemeData.light(
+        scheme: FlexScheme.blueWhale,
+        fontFamily: GoogleFonts.kanit().fontFamily,
+      ),
+      darkTheme: FlexThemeData.dark(
+        scheme: FlexScheme.blueWhale,
+        fontFamily: GoogleFonts.kanit().fontFamily,
       ),
     );
   }
