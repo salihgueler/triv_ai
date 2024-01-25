@@ -39,4 +39,17 @@ class QuizSuccess extends QuizState {
       ];
 }
 
-class QuizFinishedState extends QuizState {}
+class QuizFinishedState extends QuizState {
+  const QuizFinishedState(
+    this.questions,
+    this.answers,
+    this.score,
+  );
+
+  final List<Question> questions;
+  final List<String> answers;
+  final double score;
+
+  @override
+  List<Object> get props => [questions, answers];
+}

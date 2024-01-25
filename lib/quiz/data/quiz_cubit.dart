@@ -1,133 +1,121 @@
+import 'dart:convert';
+
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:triv_ai/models/Question.dart';
+import 'package:http/http.dart' as http;
 
 part 'quiz_state.dart';
 
 class QuizCubit extends Cubit<QuizState> {
   QuizCubit() : super(QuizInitial());
 
-  final _questions = <Question>[
-    Question(
-      id: '1',
-      title: 'What is the capital of Türkiye?',
-      answer: 'Ankara',
-      category: 'Geography',
-      options: ['İstanbul', 'Ankara', 'İzmir', 'Antalya'],
-      difficulty: "Easy",
-      createdAt: TemporalDateTime(DateTime.now()),
-      updatedAt: TemporalDateTime(DateTime.now()),
-    ),
-    Question(
-      id: '2',
-      title: 'Who wrote "Hamlet"?',
-      answer: 'William Shakespeare',
-      category: 'Literature',
-      options: ['Charles Dickens', 'William Shakespeare', 'Leo Tolstoy', 'Mark Twain'],
-      difficulty: "Easy",
-      createdAt: TemporalDateTime(DateTime.now()),
-      updatedAt: TemporalDateTime(DateTime.now()),
-    ),
-    Question(
-      id: '3',
-      title: 'Which planet is known as the Red Planet?',
-      answer: 'Mars',
-      category: 'Astronomy',
-      options: ['Jupiter', 'Mars', 'Venus', 'Mercury'],
-      difficulty: "Easy",
-      createdAt: TemporalDateTime(DateTime.now()),
-      updatedAt: TemporalDateTime(DateTime.now()),
-    ),
-    Question(
-      id: '4',
-      title: 'What is the main ingredient in guacamole?',
-      answer: 'Avocado',
-      category: 'Cuisine',
-      options: ['Tomato', 'Potato', 'Avocado', 'Eggplant'],
-      difficulty: "Easy",
-      createdAt: TemporalDateTime(DateTime.now()),
-      updatedAt: TemporalDateTime(DateTime.now()),
-    ),
-    Question(
-      id: '5',
-      title: 'In what year did the Titanic sink?',
-      answer: '1912',
-      category: 'History',
-      options: ['1912', '1910', '1914', '1908'],
-      difficulty: "Easy",
-      createdAt: TemporalDateTime(DateTime.now()),
-      updatedAt: TemporalDateTime(DateTime.now()),
-    ),
-    Question(
-      id: '6',
-      title: 'Which element has the chemical symbol "O"?',
-      answer: 'Oxygen',
-      category: 'Science',
-      options: ['Gold', 'Oxygen', 'Silver', 'Iron'],
-      difficulty: "Easy",
-      createdAt: TemporalDateTime(DateTime.now()),
-      updatedAt: TemporalDateTime(DateTime.now()),
-    ),
-    Question(
-      id: '7',
-      title: 'What is the largest mammal in the world?',
-      answer: 'Blue Whale',
-      category: 'Nature',
-      options: ['Elephant', 'Blue Whale', 'Giraffe', 'Hippopotamus'],
-      difficulty: "Easy",
-      createdAt: TemporalDateTime(DateTime.now()),
-      updatedAt: TemporalDateTime(DateTime.now()),
-    ),
-    Question(
-      id: '8',
-      title: 'Who painted the Mona Lisa?',
-      answer: 'Leonardo da Vinci',
-      category: 'Art',
-      options: ['Vincent Van Gogh', 'Pablo Picasso', 'Leonardo da Vinci', 'Claude Monet'],
-      difficulty: "Easy",
-      createdAt: TemporalDateTime(DateTime.now()),
-      updatedAt: TemporalDateTime(DateTime.now()),
-    ),
-    Question(
-      id: '9',
-      title: 'What is the capital of Japan?',
-      answer: 'Tokyo',
-      category: 'Geography',
-      options: ['Kyoto', 'Osaka', 'Tokyo', 'Hiroshima'],
-      difficulty: "Easy",
-      createdAt: TemporalDateTime(DateTime.now()),
-      updatedAt: TemporalDateTime(DateTime.now()),
-    ),
-    Question(
-      id: '10',
-      title: 'Who is known as the father of modern physics?',
-      answer: 'Albert Einstein',
-      category: 'Science',
-      options: ['Isaac Newton', 'Galileo Galilei', 'Nikola Tesla', 'Albert Einstein'],
-      difficulty: "Easy",
-      createdAt: TemporalDateTime(DateTime.now()),
-      updatedAt: TemporalDateTime(DateTime.now()),
-    ),
-  ];
+  final _answers = <String>[];
 
-  Future<void> generateQuestions() async {
+  Future<void> generateQuestions(
+    int questionCount,
+    List<String> categories,
+    String difficulty,
+  ) async {
     emit(QuizQuestionsLoading());
-    emit(QuizSuccess(_questions, _questions.first, 0));
-  }
-
-  Future<void> changeQuestion(int index) async {
-    final nextIndex = index + 1;
-    if (nextIndex == _questions.length) {
-      emit(QuizFinishedState());
-    } else {
-      emit(
-        QuizSuccess(
-          _questions,
-          _questions[nextIndex],
-          nextIndex,
+    final url = Uri.https(
+      'q9000l7dqc.execute-api.eu-central-1.amazonaws.com',
+      'prod/generateQuiz',
+      {
+        "questionCount": questionCount.toString(),
+        "categoryList": categories.join(","),
+        "difficulty": difficulty,
+      },
+    );
+    var response = await http.get(
+      url,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        'Content-Type': 'application/json',
+        'Accept': '*/*'
+      },
+    );
+    final content = json.decode(response.body);
+    final outputText = content["message"]["results"][0]["outputText"] as String;
+    final firstIndex = outputText.indexOf("{");
+    final lastIndex = outputText.lastIndexOf("}");
+    final chopped = outputText.substring(firstIndex, lastIndex + 1);
+    final jsonToParse = json.decode(chopped)["rows"] as List<dynamic>;
+    final questions = <Question>[];
+    for (final parsedElement in jsonToParse) {
+      final optionsDynamic = parsedElement['Options'] as List<dynamic>;
+      final options = optionsDynamic.cast<String>();
+      questions.add(
+        Question(
+          title: parsedElement['Question'] as String,
+          answer: parsedElement['CorrectAnswer'] as String,
+          category: parsedElement['Category'] as String,
+          difficulty: difficulty,
+          options: options,
+          createdAt: TemporalDateTime(DateTime.now()),
+          updatedAt: TemporalDateTime(DateTime.now()),
         ),
       );
     }
+    emit(QuizSuccess(questions, questions.first, 0));
+  }
+
+  void fetchQuestions() {
+    if (state is QuizSuccess) {
+      emit(
+        QuizSuccess(
+          (state as QuizSuccess).questions,
+          (state as QuizSuccess).currentQuestion,
+          (state as QuizSuccess).currentQuestionIndex,
+        ),
+      );
+    } else {
+      emit(const QuizError('Quiz not found'));
+    }
+  }
+
+  Future<void> changeQuestion(String selectedOption) async {
+    _answers.add(selectedOption);
+    if (state is QuizSuccess) {
+      final questions = (state as QuizSuccess).questions;
+      final currentQuestionIndex = (state as QuizSuccess).currentQuestionIndex;
+      if (currentQuestionIndex < questions.length - 1) {
+        emit(
+          QuizSuccess(
+            questions,
+            questions[currentQuestionIndex + 1],
+            currentQuestionIndex + 1,
+          ),
+        );
+      } else {
+        final score = _calculateScore(questions, _answers);
+        emit(
+          QuizFinishedState(
+            questions,
+            _answers,
+            score,
+          ),
+        );
+      }
+    } else {
+      emit(const QuizError('Quiz not found'));
+    }
+  }
+
+  double _calculateScore(List<Question> questions, List<String> answers) {
+    final scorePerQuestion = 100 / questions.length;
+    var score = 0.0;
+    for (var i = 0; i < questions.length; i++) {
+      if (questions[i].answer == answers[i]) {
+        score += scorePerQuestion;
+      }
+    }
+    return score;
+  }
+
+  void resetQuiz() {
+    emit(QuizInitial());
+    _answers.clear();
   }
 }

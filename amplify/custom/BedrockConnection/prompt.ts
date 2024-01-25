@@ -21,8 +21,13 @@ export const generateQuiz = async (
     ". " +
     ". The questions should be " +
     difficulty +
-    ". Each question should have 4 options and 1 correct answer. " +
-    ". Return the answer in JSON format.";
+    ". Each question should have 4 options. Each option should be in string format." +
+    " Each question should have 1 correct answer. The correct answer should be in string format" +
+    " Each question should be unique. Options of the questions should not repeat themselves." +
+    " Do not use double or single quotes within the question strings." +
+    " Split the questions equally among the categories." +
+    " Return the answer in JSON format." +
+    " The JSON format should be valid and easy to be parsed by mobile applications.";
 
   const input = {
     modelId: "amazon.titan-text-express-v1",

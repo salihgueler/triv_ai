@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -30,38 +27,9 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () async {
-                  // context.go('/quiz');
-                  var url = Uri.https(
-                    'q9000l7dqc.execute-api.eu-central-1.amazonaws.com',
-                    'prod/generateQuiz',
-                    {
-                      "questionCount": "10",
-                      "categoryList": "Sport,History,Geography",
-                      "difficulty": "easy",
-                    },
-                  );
-                  var response = await http.get(
-                    url,
-                    headers: {
-                      "Access-Control-Allow-Origin": "*",
-                      'Content-Type': 'application/json',
-                      'Accept': '*/*'
-                    },
-                  );
-                  final content = json.decode(response.body);
-                  final outputText =
-                      content["message"]["results"][0]["outputText"] as String;
-                  final firstIndex = outputText.indexOf("{");
-                  final lastIndex = outputText.lastIndexOf("}");
-                  final chopped =
-                      outputText.substring(firstIndex, lastIndex + 1);
-                  final jsonToParse =
-                      json.decode(chopped)["rows"] as List<dynamic>;
-                  jsonToParse.forEach((element) {
-                    print(element);
-                  });
+                  context.go('/generate-quiz');
                 },
-                child: const Text('Start Quiz'),
+                child: const Text('Generate Quiz'),
               ),
             ],
           ),

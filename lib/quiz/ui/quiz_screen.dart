@@ -14,21 +14,18 @@ class QuizScreen extends StatefulWidget {
 }
 
 class _QuizScreenState extends State<QuizScreen> {
-  late final QuizCubit _quizCubit = QuizCubit();
-
   @override
   void initState() {
     super.initState();
-    _quizCubit.generateQuestions();
+    context.read<QuizCubit>().fetchQuestions();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<QuizCubit, QuizState>(
-      bloc: _quizCubit,
       listener: (context, state) {
         if (state is QuizFinishedState) {
-          context.go('/');
+          context.go('/result');
         }
       },
       builder: (context, state) {
@@ -50,10 +47,6 @@ class _QuizScreenState extends State<QuizScreen> {
                       'Question ${state.currentQuestionIndex}/${questions.length}',
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
-                    // leading: Text(
-                    //   'Question $_currentQuestionIndex/${widget.questions.length}',
-                    //   style: Theme.of(context).textTheme.headlineSmall,
-                    // ),
                     trailing: Text(
                       'Remaining 30 seconds',
                       style: Theme.of(context).textTheme.headlineSmall,
@@ -62,7 +55,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   QuestionView(
                     question: state.currentQuestion,
                     onSelected: (String value) {
-                      _quizCubit.changeQuestion(state.currentQuestionIndex);
+                      context.read<QuizCubit>().changeQuestion(value);
                     },
                   ),
                 ],

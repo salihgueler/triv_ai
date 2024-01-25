@@ -4,9 +4,11 @@ import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:triv_ai/amplifyconfiguration.dart';
 import 'package:triv_ai/models/ModelProvider.dart';
+import 'package:triv_ai/quiz/data/quiz_cubit.dart';
 import 'package:triv_ai/routes.dart';
 
 // ignore: depend_on_referenced_packages
@@ -42,19 +44,22 @@ class TrivAIApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Authenticator(
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        builder: Authenticator.builder(),
-        routerDelegate: router.routerDelegate,
-        routeInformationParser: router.routeInformationParser,
-        routeInformationProvider: router.routeInformationProvider,
-        theme: FlexThemeData.light(
-          scheme: FlexScheme.blueWhale,
-          fontFamily: GoogleFonts.kanit().fontFamily,
-        ),
-        darkTheme: FlexThemeData.dark(
-          scheme: FlexScheme.blueWhale,
-          fontFamily: GoogleFonts.kanit().fontFamily,
+      child: BlocProvider(
+        create: (context) => QuizCubit(),
+        child: MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          builder: Authenticator.builder(),
+          routerDelegate: router.routerDelegate,
+          routeInformationParser: router.routeInformationParser,
+          routeInformationProvider: router.routeInformationProvider,
+          theme: FlexThemeData.light(
+            scheme: FlexScheme.blueWhale,
+            fontFamily: GoogleFonts.kanit().fontFamily,
+          ),
+          darkTheme: FlexThemeData.dark(
+            scheme: FlexScheme.blueWhale,
+            fontFamily: GoogleFonts.kanit().fontFamily,
+          ),
         ),
       ),
     );
