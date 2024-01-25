@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:triv_ai/models/Question.dart';
+import 'package:triv_ai/question/data/question.dart';
 
 class QuestionView extends StatefulWidget {
   const QuestionView({
@@ -15,7 +15,6 @@ class QuestionView extends StatefulWidget {
 }
 
 class _QuestionViewState extends State<QuestionView> {
-
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
@@ -48,7 +47,7 @@ class _QuestionViewState extends State<QuestionView> {
             ),
           ),
           ...widget.question.options.map(
-                (option) => Padding(
+            (option) => Padding(
               padding: const EdgeInsets.all(16),
               child: ElevatedButton(
                 onPressed: () {

@@ -1,10 +1,6 @@
-import 'dart:convert';
-
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:triv_ai/models/Question.dart';
-import 'package:http/http.dart' as http;
+import 'package:triv_ai/question/data/question.dart';
 
 part 'quiz_state.dart';
 
@@ -12,53 +8,52 @@ class QuizCubit extends Cubit<QuizState> {
   QuizCubit() : super(QuizInitial());
 
   final _answers = <String>[];
-
+  final _questions = <Question>[
+    Question(
+      title: 'What is the capital of Indonesia?',
+      options: const ['Jakarta', 'Bandung', 'Surabaya', 'Bali'],
+      answer: 'Jakarta',
+      category: 'Geography',
+      difficulty: 'Easy',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    Question(
+      title: 'What is the capital of Japan?',
+      options: const ['Tokyo', 'Kyoto', 'Osaka', 'Hiroshima'],
+      answer: 'Tokyo',
+      category: 'Geography',
+      difficulty: 'Easy',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    Question(
+      title: 'What is the capital of South Korea?',
+      options: const ['Seoul', 'Busan', 'Incheon', 'Jeju'],
+      answer: 'Seoul',
+      category: 'Geography',
+      difficulty: 'Easy',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    Question(
+      title: 'What is the capital of China?',
+      options: const ['Beijing', 'Shanghai', 'Guangzhou', 'Shenzhen'],
+      answer: 'Beijing',
+      category: 'Geography',
+      difficulty: 'Easy',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+  ];
   Future<void> generateQuestions(
     int questionCount,
     List<String> categories,
     String difficulty,
   ) async {
     emit(QuizQuestionsLoading());
-    final url = Uri.https(
-      'q9000l7dqc.execute-api.eu-central-1.amazonaws.com',
-      'prod/generateQuiz',
-      {
-        "questionCount": questionCount.toString(),
-        "categoryList": categories.join(","),
-        "difficulty": difficulty,
-      },
-    );
-    var response = await http.get(
-      url,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        'Content-Type': 'application/json',
-        'Accept': '*/*'
-      },
-    );
-    final content = json.decode(response.body);
-    final outputText = content["message"]["results"][0]["outputText"] as String;
-    final firstIndex = outputText.indexOf("{");
-    final lastIndex = outputText.lastIndexOf("}");
-    final chopped = outputText.substring(firstIndex, lastIndex + 1);
-    final jsonToParse = json.decode(chopped)["rows"] as List<dynamic>;
-    final questions = <Question>[];
-    for (final parsedElement in jsonToParse) {
-      final optionsDynamic = parsedElement['Options'] as List<dynamic>;
-      final options = optionsDynamic.cast<String>();
-      questions.add(
-        Question(
-          title: parsedElement['Question'] as String,
-          answer: parsedElement['CorrectAnswer'] as String,
-          category: parsedElement['Category'] as String,
-          difficulty: difficulty,
-          options: options,
-          createdAt: TemporalDateTime(DateTime.now()),
-          updatedAt: TemporalDateTime(DateTime.now()),
-        ),
-      );
-    }
-    emit(QuizSuccess(questions, questions.first, 0));
+    await Future.delayed(const Duration(seconds: 2));
+    emit(QuizSuccess(_questions, _questions.first, 0));
   }
 
   void fetchQuestions() {
