@@ -45,15 +45,85 @@ class QuizCubit extends Cubit<QuizState> {
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     ),
+    Question(
+      category: 'Sport',
+      title: 'Which country won the 2018 FIFA World Cup?',
+      options: const ['France', 'Croatia', 'England', 'Belgium'],
+      answer: 'France',
+      difficulty: 'Easy',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    Question(
+      category: 'Sport',
+      title: 'Which country hosted the 2018 FIFA World Cup?',
+      options: const ['Russia', 'France', 'Germany', 'Brazil'],
+      answer: 'Russia',
+      difficulty: 'Easy',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    Question(
+      category: 'Sport',
+      title: 'Which country won the 2014 FIFA World Cup?',
+      options: const ['Germany', 'Argentina', 'Brazil', 'Netherlands'],
+      answer: 'Germany',
+      difficulty: 'Easy',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    Question(
+      category: 'Literature',
+      title: 'Who wrote the Harry Potter series?',
+      options: const [
+        'J. R. R. Tolkien',
+        'J. K. Rowling',
+        'J. D. Salinger',
+        'J. M. Barrie'
+      ],
+      answer: 'J. K. Rowling',
+      difficulty: 'Easy',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    Question(
+      category: 'Literature',
+      title: 'Who wrote the Lord of the Rings series?',
+      options: const [
+        'J. R. R. Tolkien',
+        'J. K. Rowling',
+        'J. D. Salinger',
+        'J. M. Barrie'
+      ],
+      answer: 'J. R. R. Tolkien',
+      difficulty: 'Easy',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    Question(
+      category: 'Movies',
+      title: 'Who directed the movie Interstellar?',
+      options: const [
+        'Christopher Nolan',
+        'Steven Spielberg',
+        'Martin Scorsese',
+        'Quentin Tarantino'
+      ],
+      answer: 'Christopher Nolan',
+      difficulty: 'Easy',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    )
   ];
+
   Future<void> generateQuestions(
     int questionCount,
     List<String> categories,
     String difficulty,
   ) async {
     emit(QuizQuestionsLoading());
-    await Future.delayed(const Duration(seconds: 2));
-    emit(QuizSuccess(_questions, _questions.first, 0));
+    await Future.delayed(const Duration(seconds: 1));
+    emit(QuizSuccess(_questions.sublist(0, questionCount-1), _questions.first, 0));
   }
 
   void fetchQuestions() {
