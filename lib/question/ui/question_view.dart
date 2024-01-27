@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:triv_ai/question/data/question.dart';
+import 'package:triv_ai/models/Question.dart';
 
 class QuestionView extends StatefulWidget {
   const QuestionView({
@@ -18,7 +18,7 @@ class _QuestionViewState extends State<QuestionView> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      widthFactor: 0.5,
+      widthFactor: 0.75,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -58,7 +58,10 @@ class _QuestionViewState extends State<QuestionView> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(12),
-                  child: Text(option),
+                  child: Text(
+                    option,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ),

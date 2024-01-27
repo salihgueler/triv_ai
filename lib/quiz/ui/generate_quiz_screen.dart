@@ -28,13 +28,19 @@ class _GenerateQuizScreenState extends State<GenerateQuizScreen> {
         },
         builder: (context, state) {
           switch (state) {
-            case QuizQuestionsLoading _:
             case QuizSuccess _:
-              return const Center(
+            case QuizLoading _:
+              return Center(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Loading questions'),
-                    CircularProgressIndicator(),
+                    Text(
+                      'Generating Quiz Questions',
+                      style: Theme.of(context).textTheme.titleLarge,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    const CircularProgressIndicator(),
                   ],
                 ),
               );
@@ -172,8 +178,8 @@ class _GenerateQuizScreenState extends State<GenerateQuizScreen> {
                     },
                     label: questionCount.round().toString(),
                     min: 1,
-                    divisions: 10,
-                    max: 10,
+                    divisions: 8,
+                    max: 9,
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(

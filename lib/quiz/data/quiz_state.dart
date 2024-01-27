@@ -9,7 +9,9 @@ abstract class QuizState extends Equatable {
 
 class QuizInitial extends QuizState {}
 
-class QuizQuestionsLoading extends QuizState {}
+class QuizLoading extends QuizState {}
+
+class QuizSaved extends QuizState {}
 
 class QuizError extends QuizState {
   const QuizError(this.message);

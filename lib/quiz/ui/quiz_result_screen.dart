@@ -12,7 +12,12 @@ class QuizResultScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Quiz Result'),
       ),
-      body: BlocBuilder<QuizCubit, QuizState>(
+      body: BlocConsumer<QuizCubit, QuizState>(
+        listener: (context, state) {
+          if (state is QuizSaved) {
+            context.go('/');
+          }
+        },
         builder: (context, state) {
           if (state is QuizFinishedState) {
             return Column(
@@ -40,8 +45,10 @@ class QuizResultScreen extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
-                          onPressed: () {},
-                          child: const Text('Save the Quiz'),
+                          onPressed: () {
+                            context.read<QuizCubit>().saveQuiz();
+                          },
+                          child: const Text('Save the Results'),
                         ),
                       ),
                     ),
@@ -73,6 +80,25 @@ class QuizResultScreen extends StatelessWidget {
                   ),
                 ),
               ],
+            );
+          } else if (state is QuizError) {
+            return Center(
+              child: Text(state.message),
+            );
+          } else if (state is QuizLoading) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Saving results',
+                    style: Theme.of(context).textTheme.titleLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const CircularProgressIndicator(),
+                ],
+              ),
             );
           }
           return const SizedBox.shrink();

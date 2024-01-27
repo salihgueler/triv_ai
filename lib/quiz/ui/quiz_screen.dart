@@ -25,7 +25,7 @@ class _QuizScreenState extends State<QuizScreen> {
     return BlocConsumer<QuizCubit, QuizState>(
       listener: (context, state) {
         if (state is QuizFinishedState) {
-          context.go('/result');
+          context.go('/quiz-result');
         }
       },
       builder: (context, state) {
@@ -44,11 +44,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 children: [
                   ListTile(
                     leading: Text(
-                      'Question ${state.currentQuestionIndex}/${questions.length}',
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    trailing: Text(
-                      'Remaining 30 seconds',
+                      'Question ${state.currentQuestionIndex + 1}/${questions.length}',
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   ),
