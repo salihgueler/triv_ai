@@ -1,11 +1,6 @@
-import 'dart:convert';
-
-import 'package:amplify_api/amplify_api.dart';
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:triv_ai/models/ModelProvider.dart';
-import 'package:http/http.dart' as http;
+import 'package:triv_ai/question/data/question.dart';
 
 part 'quiz_state.dart';
 
@@ -13,57 +8,37 @@ class QuizCubit extends Cubit<QuizState> {
   QuizCubit() : super(QuizInitial());
 
   final _answers = <String>[];
-
+  static const _questions = <Question>[
+    Question(
+      title: 'What is the capital of France?',
+      answer: 'Paris',
+      category: 'Geography',
+      difficulty: 'Easy',
+      options: ['Paris', 'Berlin', 'London', 'New York'],
+    ),
+    Question(
+      title: 'Who wrote the Harry Potter series?',
+      answer: 'J.K. Rowling',
+      category: 'Literature',
+      difficulty: 'Easy',
+      options: ['J.K. Rowling', 'J.R.R. Tolkien', 'J.D. Salinger', 'J.K. Simmons'],
+    ),
+    Question(
+      title: 'What is the ocean between Europe and America called?',
+      answer: 'Atlantic',
+      category: 'Geography',
+      difficulty: 'Easy',
+      options: ['Atlantic', 'Pacific', 'Indian', 'Arctic'],
+    )
+  ];
   Future<void> generateQuestions(
     int questionCount,
     List<String> categories,
     String difficulty,
   ) async {
     emit(QuizLoading());
-    final url = Uri.https(
-      'pv8ziqol9c.execute-api.eu-central-1.amazonaws.com',
-      'prod/generateQuiz',
-      {
-        "questionCount": questionCount.toString(),
-        "categoryList": categories.join(","),
-        "difficulty": difficulty,
-      },
-    );
-    try {
-      final response = await http.get(
-        url,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-      );
-      final content = json.decode(response.body);
-      final outputText = content["message"]["completion"] as String;
-      final firstIndex = outputText.indexOf("[");
-      final lastIndex = outputText.lastIndexOf("]");
-      final chopped = outputText.substring(firstIndex, lastIndex + 1);
-      final jsonToParse = json.decode(chopped) as List<dynamic>;
-      final questions = <Question>[];
-      for (final parsedElement in jsonToParse) {
-        final optionsDynamic = parsedElement['options'] as List<dynamic>;
-        final options = optionsDynamic.cast<String>();
-        questions.add(
-          Question(
-            title: parsedElement['question'] as String,
-            answer: parsedElement['correctAnswer'] as String,
-            category: parsedElement['category'] as String,
-            difficulty: difficulty,
-            options: options,
-            createdAt: TemporalDateTime(DateTime.now()),
-            updatedAt: TemporalDateTime(DateTime.now()),
-          ),
-        );
-        emit(QuizSuccess(questions, questions.first, 0));
-      }
-    } on Exception catch (e) {
-      emit(QuizError('Could not fetch the questions: \n\n$e'));
-    }
+    Future.delayed(const Duration(seconds: 1));
+    emit(QuizSuccess(_questions, _questions.first, 0));
   }
 
   void fetchQuestions() {
@@ -125,48 +100,7 @@ class QuizCubit extends Cubit<QuizState> {
   }
 
   Future<void> saveQuiz() async {
-    if (state is QuizFinishedState) {
-      final currentState = (state as QuizFinishedState);
-      final questions = currentState.questions;
-      final answers = currentState.answers;
-      final score = currentState.score;
-      int correctAnswerCount = 0;
-      for (var i = 0; i < questions.length; i++) {
-        if (questions[i].answer == answers[i]) {
-          correctAnswerCount++;
-        }
-      }
-      emit(QuizLoading());
-      final result = Result(
-        score: score,
-        correctAnswerCount: correctAnswerCount,
-        answers: answers,
-      );
-      final mutation = ModelMutations.create(result);
-      try {
-        final response = await Amplify.API.mutate(request: mutation).response;
-        for (final question in currentState.questions) {
-          final questionMutation = ModelMutations.create(
-            question.copyWith(
-              resultQuestionsId: result.id,
-              updatedAt: TemporalDateTime(DateTime.now()),
-            ),
-          );
-          final questionResult =
-              await Amplify.API.mutate(request: questionMutation).response;
-          if (questionResult.hasErrors) {
-            throw Exception(questionResult.errors.toString());
-          }
-        }
-        if (response.hasErrors) {
-          emit(QuizError(response.errors.toString()));
-        } else {
-          emit(QuizSaved());
-          resetQuiz();
-        }
-      } on Exception catch (e) {
-        emit(QuizError(e.toString()));
-      }
-    }
+    resetQuiz();
+    emit(QuizSaved());
   }
 }

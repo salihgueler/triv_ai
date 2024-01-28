@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:triv_ai/models/Question.dart';
+import 'package:triv_ai/question/data/question.dart';
 
 class QuestionView extends StatefulWidget {
   const QuestionView({
