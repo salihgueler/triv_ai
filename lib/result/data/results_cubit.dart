@@ -16,24 +16,25 @@ class ResultsCubit extends Cubit<ResultsState> {
     try {
       const graphQLDocument = '''
 query ListResults {
-listResults {
-  items {
-    id
-    answers
-    correctAnswerCount
-    score
-    questions {
-      items {
-        id
-        answer
-        category
-        difficulty
-        options
-        title
+  listResults {
+    items {
+      id
+      answers
+      correctAnswerCount
+      score
+      questions {
+        items {
+          id
+          answer
+          category
+          difficulty
+          options
+          title
+          updatedAt
+        }
       }
     }
   }
-}
 }
     ''';
       final getResultRequest = GraphQLRequest<String>(
@@ -65,9 +66,16 @@ listResults {
                         difficulty: e['difficulty'] as String,
                         options: (e['options'] as List<dynamic>).cast<String>(),
                         title: e['title'] as String,
+                        updatedAt: TemporalDateTime.fromString(
+                            e['updatedAt'] as String),
                       ),
                     )
-                    .toList(growable: false),
+                    .toList(growable: false)
+                  ..sort(
+                    (a, b) => a.updatedAt!
+                        .getDateTimeInUtc()
+                        .compareTo(b.updatedAt!.getDateTimeInUtc()),
+                  ),
               ),
             )
             .toList(growable: false);

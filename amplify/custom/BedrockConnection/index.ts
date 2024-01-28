@@ -9,7 +9,7 @@ export const handler: Handler = async (event: {
   };
 }) => {
   const { questionCount, categoryList, difficulty } =
-    event.queryStringParameters;
+      event.queryStringParameters;
 
   const result = await generateQuiz(questionCount, categoryList, difficulty);
   return {

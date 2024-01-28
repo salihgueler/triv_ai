@@ -34,7 +34,6 @@ class _ResultDetailScreenState extends State<ResultDetailScreen> {
             child: ListView.builder(
               itemCount: result.answers.length,
               itemBuilder: (context, index) {
-
                 final question = result.questions![index];
                 final answer = result.answers[index];
                 return ListTile(
@@ -44,8 +43,11 @@ class _ResultDetailScreenState extends State<ResultDetailScreen> {
                           'Your answer: $answer and correct answer: ${question.answer}')
                       : const SizedBox.shrink(),
                   trailing: Icon(
-                    answer == question.answer ? Icons.check_circle : Icons.cancel,
-                    color: answer == question.answer ? Colors.green : Colors.red,
+                    answer == question.answer
+                        ? Icons.check_circle
+                        : Icons.cancel,
+                    color:
+                        answer == question.answer ? Colors.green : Colors.red,
                   ),
                 );
               },

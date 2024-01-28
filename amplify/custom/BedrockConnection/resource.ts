@@ -4,14 +4,6 @@ import { LambdaIntegration, RestApi } from "aws-cdk-lib/aws-apigateway";
 import { CfnOutput, Duration } from "aws-cdk-lib";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import * as url from "node:url";
-import {
-  CompositePrincipal,
-  Effect,
-  PolicyDocument,
-  PolicyStatement,
-  Role,
-  ServicePrincipal,
-} from "aws-cdk-lib/aws-iam";
 
 export class BedrockConnection extends Construct {
   constructor(scope: Construct, id: string) {

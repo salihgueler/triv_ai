@@ -21,7 +21,7 @@ class QuizCubit extends Cubit<QuizState> {
   ) async {
     emit(QuizLoading());
     final url = Uri.https(
-      'ow3cp84bqb.execute-api.eu-central-1.amazonaws.com',
+      'pv8ziqol9c.execute-api.eu-central-1.amazonaws.com',
       'prod/generateQuiz',
       {
         "questionCount": questionCount.toString(),
@@ -149,6 +149,7 @@ class QuizCubit extends Cubit<QuizState> {
           final questionMutation = ModelMutations.create(
             question.copyWith(
               resultQuestionsId: result.id,
+              updatedAt: TemporalDateTime(DateTime.now()),
             ),
           );
           final questionResult =
@@ -161,6 +162,7 @@ class QuizCubit extends Cubit<QuizState> {
           emit(QuizError(response.errors.toString()));
         } else {
           emit(QuizSaved());
+          resetQuiz();
         }
       } on Exception catch (e) {
         emit(QuizError(e.toString()));
